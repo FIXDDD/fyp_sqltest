@@ -2,22 +2,26 @@ package com.abc.sqltest;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Data.db";
     public static final String TABLE_NAME1 = "Beacon_data";
-    public static final String T1_col1 = "ID";
-    public static final String T1_col2 = "ROOMS";
+    public static final String T1_col1 = "LOCATIONS";
+    public static final String T1_col2 = "BEACONS";
     public static final String TABLE_NAME2 = "Beacon_distance";
     public static final String T2_col1 = "STARTBEACON";
     public static final String T2_col2 = "ENDBEACON";
     public static final String T2_col3 = "DISTANCE";
-    public static final String createTable1 = "CREATE TABLE " + TABLE_NAME1 + "(ID TEXT,ROOMS TEXT,primary key ( ID, ROOMS));";
-    public static final String createTable2 = "CREATE TABLE " + TABLE_NAME2 + "(STARTBEACON TEXT,ENDBEACON TEXT,DISTANCE INT,primary key ( STARTBEACON, ENDBEACON));";
+    public static final String createTable1 = "CREATE TABLE " + TABLE_NAME1 + "(LOCATIONS TEXT,BEACONS TEXT," +
+            "primary key (LOCATIONS));";
+    public static final String createTable2 = "CREATE TABLE " + TABLE_NAME2 + "(ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " STARTBEACON TEXT,ENDBEACON TEXT,DISTANCE INT, FOREIGN KEY(STARTBEACON) REFERENCES "+TABLE_NAME1+"(LOCATIONS));";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -42,23 +46,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Data of T1
         ContentValues T1_r1 = new ContentValues();
-        T1_r1.put(T1_col1,"OufQT4");
-        T1_r1.put(T1_col2,"r1");
+        T1_r1.put(T1_col1,"r1");
+        T1_r1.put(T1_col2,"OufQT4");
         db.insert(TABLE_NAME1,null,T1_r1);
 
         ContentValues T1_c1 = new ContentValues();
-        T1_c1.put(T1_col1,"OugKl0");
-        T1_c1.put(T1_col2,"c1");
+        T1_c1.put(T1_col1,"c1");
+        T1_c1.put(T1_col2,"OugKl0");
         db.insert(TABLE_NAME1,null,T1_c1);
 
         ContentValues T1_r2 = new ContentValues();
-        T1_r2.put(T1_col1,"OuJ2kF");
-        T1_r2.put(T1_col2,"r2");
+        T1_r2.put(T1_col1,"r2");
+        T1_r2.put(T1_col2,"OuJ2kF");
         db.insert(TABLE_NAME1,null,T1_r2);
 
         ContentValues T1_r3 = new ContentValues();
-        T1_r3.put(T1_col1,"OuQ0Lp");
-        T1_r3.put(T1_col2,"r3");
+        T1_r3.put(T1_col1,"r3");
+        T1_r3.put(T1_col2,"OuQ0Lp");
         db.insert(TABLE_NAME1,null,T1_r3);
 
         //Data of T2
@@ -138,5 +142,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         T2_r3_r1.put(T2_col2,"r1");
         T2_r3_r1.put(T2_col3,3);
         db.insert(TABLE_NAME2,null,T2_r3_r1);
+    }
+
+    public Cursor showRooms(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT "+ T1_col1 +" FROM " + TABLE_NAME1, null);
+        return data;
+    }
+
+    public Cursor findRoomId(String room){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT "+ T1_col1 +" FROM " + TABLE_NAME1 + " WHERE " + T1_col1 + " = " + room, null);
+        return data;
     }
 }
