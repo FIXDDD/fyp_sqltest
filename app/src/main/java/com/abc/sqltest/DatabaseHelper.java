@@ -150,9 +150,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    public Cursor findRoomId(String room){
+    public Cursor findBeacon(String location){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT "+ T1_col1 +" FROM " + TABLE_NAME1 + " WHERE " + T1_col1 + " = " + room, null);
+        Cursor data = db.rawQuery("SELECT "+ T1_col2 +" FROM " + TABLE_NAME1 + " WHERE " + T1_col1 + " = " + location, null);
+        return data;
+    }
+
+    public Cursor findLocation(String beacon){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT "+ T1_col1 +" FROM " + TABLE_NAME1 + " WHERE " + T1_col2 + " = " + beacon, null);
         return data;
     }
 }
